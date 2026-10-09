@@ -5,49 +5,71 @@ const categorySelect = document.querySelector("#category-select");
 const notesList = document.querySelector("#notes-list");
 const noteCount = document.querySelector("#note-count");
 const errorMessage = document.querySelector("#error-message");
+const searchInput = document.querySelector("#search-input");
+
+const STORAGE_KEY = "quicknotes-notes";
 
 let notes = [];
 
+// Save notes in the browser
+function saveNotes() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+}
+
+// Display notes and update the count
 function renderNotes() {
   notesList.innerHTML = "";
 
-  notes.forEach((note) => {
-    const noteCard = document.createElement("li");
-    noteCard.classList.add("note-card");
-    noteCard.classList.add(
-      `category-${note.category.toLowerCase()}`
-    );
+  const searchTerm = searchInput.value.trim().toLowerCase();
 
-    const noteText = document.createElement("p");
-    noteText.textContent = note.text;
+  const filteredNotes = notes.filter((note) =>
+    note.text.toLowerCase().includes(searchTerm)
+  );
 
-    const categoryLabel = document.createElement("span");
-    categoryLabel.classList.add("category-label");
-    categoryLabel.textContent = note.category;
+  if (filteredNotes.length === 0 && searchTerm !== "") {
+    const message = document.createElement("li");
+    message.textContent = "No notes match your search.";
+    notesList.appendChild(message);
+  } else {
+    filteredNotes.forEach((note) => {
+      const noteCard = document.createElement("li");
+      noteCard.classList.add(
+        "note-card",
+        `category-${note.category.toLowerCase()}`
+      );
 
-    const noteDate = document.createElement("span");
-    noteDate.classList.add("note-date");
-    noteDate.textContent = note.createdAt;
+      const noteText = document.createElement("p");
+      noteText.textContent = note.text;
 
-    const deleteButton = document.createElement("button");
-    deleteButton.classList.add("delete-btn");
-    deleteButton.textContent = "Delete";
-    deleteButton.type = "button";
+      const categoryLabel = document.createElement("span");
+      categoryLabel.classList.add("category-label");
+      categoryLabel.textContent = note.category;
 
-    deleteButton.addEventListener("click", () => {
-      notes = notes.filter((item) => item.id !== note.id);
-      renderNotes();
+      const noteDate = document.createElement("span");
+      noteDate.classList.add("note-date");
+      noteDate.textContent = note.createdAt;
+
+      const deleteButton = document.createElement("button");
+      deleteButton.classList.add("delete-btn");
+      deleteButton.textContent = "Delete";
+      deleteButton.type = "button";
+
+      deleteButton.addEventListener("click", () => {
+        notes = notes.filter((item) => item.id !== note.id);
+        saveNotes();
+        renderNotes();
+      });
+
+      noteCard.append(
+        noteText,
+        categoryLabel,
+        noteDate,
+        deleteButton
+      );
+
+      notesList.appendChild(noteCard);
     });
-
-    noteCard.append(
-      noteText,
-      categoryLabel,
-      noteDate,
-      deleteButton
-    );
-
-    notesList.appendChild(noteCard);
-  });
+  }
 
   if (notes.length === 0) {
     noteCount.textContent = "You have no notes yet.";
@@ -58,6 +80,7 @@ function renderNotes() {
   }
 }
 
+// Add a new note
 noteForm.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -78,14 +101,35 @@ noteForm.addEventListener("submit", (event) => {
   errorMessage.textContent = "";
 
   const note = {
-    id: Date.now(),
+    id: Date.now() + Math.random(),
     text: text,
     category: category,
     createdAt: new Date().toLocaleString()
   };
 
   notes.push(note);
+  saveNotes();
 
-  renderNotes();
   noteInput.value = "";
+  renderNotes();
 });
+
+// Search notes as the user types
+searchInput.addEventListener("input", renderNotes);
+
+// Load saved notes when the page opens
+try {
+  const savedNotes = localStorage.getItem(STORAGE_KEY);
+
+  if (savedNotes !== null) {
+    const parsedNotes = JSON.parse(savedNotes);
+
+    if (Array.isArray(parsedNotes)) {
+      notes = parsedNotes;
+    }
+  }
+} catch (error) {
+  console.error("Could not load saved notes:", error);
+}
+
+renderNotes();
