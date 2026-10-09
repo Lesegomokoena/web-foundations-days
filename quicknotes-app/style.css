@@ -1,0 +1,170 @@
+
+:root {
+  --background: #f3f5f9;
+  --text: #25283d;
+  --card: #ffffff;
+  --primary: #5146c7;
+  --border: #dfe3eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+header {
+  padding: 32px 20px;
+  background: #5146c7;
+  color: white;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+header p {
+  margin-bottom: 0;
+}
+
+main {
+  width: 100%;
+  max-width: 700px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+section {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+form {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+}
+
+form div {
+  flex: 1;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font: inherit;
+}
+
+button {
+  padding: 11px 16px;
+  border: none;
+  border-radius: 7px;
+  background: var(--primary);
+  color: white;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+#error-message {
+  color: #c62828;
+  font-weight: bold;
+}
+
+#notes-list {
+  padding: 0;
+  list-style: none;
+}
+
+.note-card {
+  margin: 12px 0;
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 5px solid #008f87;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+
+.category-personal {
+  border-left-color: #008f87;
+}
+
+.category-work {
+  border-left-color: #a32638;
+}
+
+.category-study {
+  border-left-color: #2864c5;
+}
+
+.category-label {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 2px 8px;
+  background: var(--background);
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+.note-date {
+  display: block;
+  margin-top: 6px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.delete-btn {
+  margin-top: 12px;
+  background: #a32638;
+}
+
+footer {
+  padding: 16px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  form div {
+    width: 100%;
+  }
+
+  section {
+    padding: 18px;
+  }
+}
